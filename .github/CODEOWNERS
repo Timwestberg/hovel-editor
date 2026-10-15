@@ -124,9 +124,9 @@
 
 # Hovel
 
-/hovel/                                       @Timwestberg
-/hovel/**/*.py                                @Timwestberg @godotengine/buildsystem
-/hovel/**/*.sh                                @Timwestberg @godotengine/buildsystem
+# Upstream's validate-codeowners check requires these teams on build files,
+# docs, editor code and tests; they are not reviewers in this fork.
+/hovel/                                       @Timwestberg @godotengine/buildsystem @godotengine/documentation @godotengine/editor @godotengine/tests
 
 # Main
 

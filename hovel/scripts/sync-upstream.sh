@@ -44,15 +44,19 @@ git read-tree -u --reset "$target"
 git checkout "$prev" -- hovel
 printf '%s %s\n' "$ref" "$target" > hovel/UPSTREAM
 
-# Re-apply each allowed core change on top of the new upstream file.
-sed -e 's/#.*//' -e 's/[[:space:]]*$//' -e '/^$/d' hovel/CORE_CHANGES | while read -r path; do
+# Re-apply each allowed core change on top of the new upstream file. Keep going
+# after a conflict so every listed path is applied, then stop for resolution.
+conflicts=""
+while read -r path; do
   patch="$(git diff --binary "$current" "$prev" -- "$path")"
-  [[ -z "$patch" ]] || printf '%s\n' "$patch" | git apply --3way --index || {
-    echo "sync-upstream.sh: $path conflicts with upstream. Resolve it, then run:" >&2
-    echo "  git add -A && git commit -m \"$message\" && hovel/scripts/check-divergence.sh" >&2
-    exit 1
-  }
-done
+  [[ -z "$patch" ]] || printf '%s\n' "$patch" | git apply --3way --index || conflicts+="  $path"$'\n'
+done < <(sed -e 's/#.*//' -e 's/[[:space:]]*$//' -e '/^$/d' hovel/CORE_CHANGES)
+if [[ -n "$conflicts" ]]; then
+  printf 'sync-upstream.sh: these paths conflict with upstream:\n%s' "$conflicts" >&2
+  echo "Resolve them, then run:" >&2
+  echo "  git add -A && git commit -m \"$message\" && hovel/scripts/check-divergence.sh" >&2
+  exit 1
+fi
 
 git add -A
 git commit -m "$message"

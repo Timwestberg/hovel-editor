@@ -22,7 +22,7 @@ unexpected="$(comm -23 <(printf '%s\n' "$changed" | sed '/^$/d' | sort) <(printf
 
 if [[ -n "$unexpected" ]]; then
   echo "These files differ from upstream $ref (${base:0:10}) but are not in hovel/CORE_CHANGES:" >&2
-  printf '  %s\n' $unexpected >&2
+  printf '%s\n' "$unexpected" | sed 's/^/  /' >&2
   echo "Move the change into hovel/, or list the path in hovel/CORE_CHANGES with a reason." >&2
   exit 1
 fi
