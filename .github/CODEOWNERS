@@ -122,6 +122,12 @@
 /editor/translations/                         @godotengine/editor @godotengine/i18n
 /editor/translations/**/SCsub                 @godotengine/editor @godotengine/i18n @godotengine/buildsystem
 
+# Hovel
+
+# Upstream's validate-codeowners check requires these teams on build files,
+# docs, editor code and tests; they are not reviewers in this fork.
+/hovel/                                       @Timwestberg @godotengine/buildsystem @godotengine/documentation @godotengine/editor @godotengine/tests
+
 # Main
 
 /main/                                        @godotengine/core
