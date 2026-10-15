@@ -26,6 +26,11 @@ git remote get-url upstream > /dev/null 2>&1 \
 git fetch upstream "$ref"
 target="$(git rev-parse 'FETCH_HEAD^{commit}')"
 if [[ "$target" == "$current" ]]; then
+  if [[ "$ref" != "$current_ref" ]]; then
+    # Same commit under a new name, such as master becoming 4.8-stable.
+    printf '%s %s\n' "$ref" "$target" > hovel/UPSTREAM
+    git commit -m "Track upstream Godot $ref (${target:0:10})" -- hovel/UPSTREAM
+  fi
   echo "Already on upstream $ref (${target:0:10})."
   exit 0
 fi
