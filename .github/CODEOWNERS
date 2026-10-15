@@ -122,6 +122,12 @@
 /editor/translations/                         @godotengine/editor @godotengine/i18n
 /editor/translations/**/SCsub                 @godotengine/editor @godotengine/i18n @godotengine/buildsystem
 
+# Hovel
+
+/hovel/                                       @Timwestberg
+/hovel/**/*.py                                @Timwestberg @godotengine/buildsystem
+/hovel/**/*.sh                                @Timwestberg @godotengine/buildsystem
+
 # Main
 
 /main/                                        @godotengine/core

@@ -1,0 +1,4 @@
+# Paths outside hovel/ that Hovel is allowed to change, one per line, each with
+# a trailing comment saying why. Keep this empty if at all possible: every entry
+# is a conflict waiting at the next upstream merge.
+.github/CODEOWNERS # owners for /hovel/; upstream's validate-codeowners check fails on unowned files and on scripts without @godotengine/buildsystem
