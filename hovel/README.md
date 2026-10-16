@@ -40,13 +40,46 @@ then:
 ```sh
 hovel/scripts/build.sh editor     # the editor for this machine
 hovel/scripts/build.sh web        # non-threaded Web release template (needs Emscripten)
-hovel/scripts/build.sh android    # arm64 Android release template (needs the Android SDK and NDK)
+hovel/scripts/build.sh android    # arm64 Android release template and library (see below)
 hovel/scripts/build.sh ios        # iOS release template (macOS with Xcode)
 ```
 
 Each build uses `hovel/profile.py`, so the editor and every template include the
 same modules in `hovel/modules/`. Extra arguments go to SCons, for example
 `hovel/scripts/build.sh web target=template_debug`.
+
+## Android library
+
+`hovel/scripts/build.sh android` builds the arm64 release template with Hovel's
+profile, then runs Godot's Gradle step to produce the Godot Android library
+(AAR). Gamero embeds this library to run Hovel natively on Android. There is no
+official library for the 4.8 beta on Maven Central, so it must come from here.
+
+Prerequisites:
+
+- JDK 17
+- The Android SDK, with `ANDROID_HOME` set to its folder
+- NDK `29.0.14206865` (SCons installs it with `sdkmanager` when the SDK's
+  cmdline-tools are present)
+
+Output in `bin/`:
+
+| File | What it is |
+| --- | --- |
+| `godot-lib.template_release.aar` | The Android library Gamero embeds |
+| `android_release.apk` | The Android export template |
+| `android_source.zip` | The Gradle build template for exports |
+
+`hovel/scripts/build.sh android target=template_debug` gives
+`godot-lib.template_debug.aar` and `android_debug.apk` instead.
+
+The script fails if `ANDROID_HOME` does not point to a folder, and exits 1 if
+the AAR is missing or older than the build, because Godot's Gradle step does
+not fail the SCons build on its own. Rerun Gradle by hand to see the error:
+`(cd platform/android/java && ./gradlew generateGodotTemplates)`.
+
+Gamero uses only an AAR built from `hovel/main`, so the library has the same
+Godot commit and modules as the editor and the Web template.
 
 ## Syncing with upstream
 
