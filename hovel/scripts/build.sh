@@ -50,10 +50,17 @@ for arg in "$@"; do
   esac
 done
 
+case "$target" in
+  template_release | template_debug) ;;
+  *) echo "build.sh: android builds target=template_release or target=template_debug, not '$target'." >&2; exit 2 ;;
+esac
+
 if [[ -z "$sdk" || ! -d "$sdk" ]]; then
   echo "build.sh: Android SDK not found (ANDROID_HOME='$sdk'). Install the Android SDK and NDK 29.0.14206865, then set ANDROID_HOME to the SDK folder." >&2
   exit 1
 fi
+# SCons and Godot's Gradle step both read ANDROID_HOME, so give them the same SDK.
+export ANDROID_HOME="$sdk"
 
 aar="bin/godot-lib.${target}.aar"
 stamp="$(mktemp)"

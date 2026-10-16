@@ -77,6 +77,8 @@ The script fails if `ANDROID_HOME` does not point to a folder, and exits 1 if
 the AAR is missing or older than the build, because Godot's Gradle step does
 not fail the SCons build on its own. Rerun Gradle by hand to see the error:
 `(cd platform/android/java && ./gradlew generateGodotTemplates)`.
+Each build first deletes the AAR for its target, so a failed build leaves no
+AAR in `bin/`; copy one out first if you need to keep it.
 
 Gamero uses only an AAR built from `hovel/main`, so the library has the same
 Godot commit and modules as the editor and the Web template.
